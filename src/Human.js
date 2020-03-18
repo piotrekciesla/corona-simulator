@@ -114,7 +114,7 @@ class Human {
   }
 
   setHealthy(){
-    if (this.sickHisotry > 2 ){
+    if (this.sickHisotry > 7 ){
       return;
     }
     document.humanStatesCount[this.state]--;
