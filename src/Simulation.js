@@ -3,7 +3,7 @@ import Human from "./Human";
 import HumansRenderer from "./HumansRenderer";
 
 document.humanStatesCount = {
-  healthy: 200,
+  healthy: Math.round(window.innerWidth * window.innerHeight / 5000),
   sick: 0,
   immune: 0,
   dead: 0,
@@ -48,8 +48,8 @@ let s = (sk) => {
 
   sk.mouseClicked = () => {
     const human = new Human(sk, sk.mouseX, sk.mouseY);
+    document.humanStatesCount.healthy++;
     human.setSick();
-    document.humanStatesCount.sick++;
     humans.push(human)
   }
 }
