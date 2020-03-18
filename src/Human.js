@@ -16,6 +16,7 @@ class Human {
     this.xSpeed = sk.random(-2,2);
     this.ySpeed = sk.random(-1,1.5);
 
+    this.sickHisotry = 0;
     this.age = sk.random(1, 90);
     this.state = HumanStates.HEALTHY;
     this.timeUntilCured = 0;
@@ -105,6 +106,7 @@ class Human {
     if(this.isSick() || this.isImmune() || this.isDead()){
       return
     }
+    this.sickHisotry++;
     document.humanStatesCount[this.state]--;
     this.state = HumanStates.SICK;
     document.humanStatesCount[this.state]++;
@@ -112,6 +114,9 @@ class Human {
   }
 
   setHealthy(){
+    if (this.sickHisotry > 2 ){
+      return;
+    }
     document.humanStatesCount[this.state]--;
     this.state = HumanStates.HEALTHY;
     document.humanStatesCount[this.state]++;
