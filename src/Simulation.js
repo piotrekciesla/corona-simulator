@@ -44,16 +44,9 @@ let s = (sk) => {
     for(let i = 0;i<humans.length;i++) {
       humans[i].moveHuman();
     }
-  }
+  };
 
   sk.mouseClicked = () => {
-    const human = new Human(sk, sk.mouseX, sk.mouseY);
-    document.humanStatesCount.healthy++;
-    human.setSick();
-    humans.push(human)
-  }
-
-  sk.touchEnded = () => {
     const human = new Human(sk, sk.mouseX, sk.mouseY);
     document.humanStatesCount.healthy++;
     human.setSick();
