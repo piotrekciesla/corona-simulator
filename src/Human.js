@@ -1,54 +1,91 @@
+import HumanStates from './HumanStates'
+
 const sickTime = 400;
 const spring = 0.03;
 const friction = 0.999;
+const mortalityRate = () => document.getElementById('mortalityRate').value/100;
 
-class Particle {
-// setting the co-ordinates, radius and the
-// speed of a particle in both the co-ordinates axes.
-
-  constructor(sk){
+class Human {
+  constructor(sk, x , y){
     this.sk = sk;
-    this.x = sk.random(0,sk.width);
-    this.y = sk.random(0,sk.height);
 
     this.r = 6;
-    this.isSick = false;
-    this.isCured = false;
-    this.timeUntilCured = 0;
+
+    this.x = x || sk.random(0,sk.width);
+    this.y = y || sk.random(0,sk.height);
     this.xSpeed = sk.random(-2,2);
     this.ySpeed = sk.random(-1,1.5);
+
+    this.age = sk.random(1, 90);
+    this.state = HumanStates.HEALTHY;
+    this.timeUntilCured = 0;
+
+
   }
 
 // creation of a particle.
-  createParticle() {
-    if (this.isSick){
+  createHuman() {
+    if (this.isSick()){
+      if (this.r > 6 ){
+        this.r -= 0.2
+      }
       this.timeUntilCured--;
       this.xSpeed += this.sk.random(-0.1,0.1);
       this.ySpeed -= this.sk.random(-0.1,0.1);
+
       if(this.timeUntilCured === 0 ){
-        this.isCured = true;
-        this.isSick = false;
-        this.xSpeed = this.sk.random(-2,2);
-        this.ySpeed = this.sk.random(-1,1.5);
+        const chanceOfDeath = Math.random();
+        if  (chanceOfDeath < mortalityRate()){
+          this.setDead();
+          return;
+        }
+        this.setImmune();
       }
+
+      return;
     }
-    if(!this.isCured){
-      if (this.r> 6 ){
+
+    if(this.isCured()){
+      if (this.r > 6 ){
         this.r -= 0.02
       }
+      return;
     }
-    if(this.isCured){
+
+    if (this.isDead()){
+      this.xSpeed = 0;
+      this.ySpeed = 0;
+    }
+
+    if(this.isImmune()){
       if (this.r< 12 ){
         this.r += 0.02
       }else {
-        this.isCured = false
+        this.setHealthy();
       }
+      return;
     }
   }
 
+  isSick() {
+    return this.state === HumanStates.SICK;
+  }
+
+  isDead() {
+    return this.state === HumanStates.DEAD;
+  }
+
+  isCured() {
+    return this.state === HumanStates.HEALTHY;
+  }
+
+  isImmune() {
+    return this.state === HumanStates.IMMUNE;
+  }
+
 // setting the particle in motion.
-  moveParticle() {
-    if  (this.isSick && this.timeUntilCured < sickTime/2){
+  moveHuman() {
+    if  (this.isSick() && this.timeUntilCured < sickTime/2){
       this.xSpeed = 0;
       this.ySpeed = 0;
     }
@@ -65,13 +102,36 @@ class Particle {
   }
 
   setSick(){
-    if(this.isSick || this.isCured){
+    if(this.isSick() || this.isImmune() || this.isDead()){
       return
     }
-
-    this.isSick = true;
+    document.humanStatesCount[this.state]--;
+    this.state = HumanStates.SICK;
+    document.humanStatesCount[this.state]++;
     this.timeUntilCured = sickTime;
+  }
 
+  setHealthy(){
+    document.humanStatesCount[this.state]--;
+    this.state = HumanStates.HEALTHY;
+    document.humanStatesCount[this.state]++;
+  }
+
+  setDead() {
+    document.humanStatesCount[this.state]--;
+    this.state = HumanStates.DEAD;
+    document.humanStatesCount[this.state]++;
+    this.xSpeed = 0;
+    this.ySpeed = 0;
+  }
+
+  setImmune(){
+    document.humanStatesCount[this.state]--;
+    this.state = HumanStates.IMMUNE;
+    document.humanStatesCount[this.state]++;
+
+    this.xSpeed = this.sk.random(-2,2);
+    this.ySpeed = this.sk.random(-1,1.5);
   }
 
   collideHumans(human1, human2){
@@ -98,12 +158,12 @@ class Particle {
     particles.forEach(element =>{
 
       let dis = this.sk.dist(this.x,this.y,element.x,element.y);
-        if ( dis < 40 && (this.isSick || element.isSick) ) {
+        if ( dis < 40 && (this.isSick() || element.isSick()) ) {
           element.setSick();
           this.setSick();
         }
       let minDist = this.r + element.r;
-      if ( dis < minDist){
+      if ( dis < minDist && !this.isDead() && !element.isDead() ){
         this.collideHumans(this, element)
       }
 
@@ -112,4 +172,4 @@ class Particle {
 
 }
 
-export default Particle
+export default Human

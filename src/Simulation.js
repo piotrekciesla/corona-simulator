@@ -1,10 +1,16 @@
 import * as p5 from 'p5';
-import Particle from "./Particle";
+import Human from "./Human";
 import HumansRenderer from "./HumansRenderer";
 
-const peopleCount = 200;
+document.humanStatesCount = {
+  healthy: 200,
+  sick: 0,
+  immune: 0,
+  dead: 0,
+} ;
+
 let s = (sk) => {
-  let particles = [];
+  let humans = [];
   const humansRenderer = new HumansRenderer(sk);
 
   sk.setup = () =>{
@@ -12,25 +18,39 @@ let s = (sk) => {
     // sk.createCanvas(600, 600);
     sk.background('#ffffff');
 
-    for(let i = 0;i<peopleCount;i++){
-      particles.push(new Particle(sk));
+    for(let i = 0;i<document.humanStatesCount.healthy;i++){
+      humans.push(new Human(sk));
     }
-    particles[0].setSick()
+    humans[0].setSick()
   };
 
   sk.draw = () => {
+    document.getElementById('healthyCount').innerHTML = document.humanStatesCount.healthy;
+    document.getElementById('sickCount').innerHTML = document.humanStatesCount.sick;
+    document.getElementById('immuneCount').innerHTML = document.humanStatesCount.immune;
+    document.getElementById('deadCount').innerHTML = document.humanStatesCount.dead;
+
+
+
     sk.background('#ffffff');
 
-    particles.forEach((particle, index) => {
-      particle.simulateEncounter(particles.slice(index));
-      particle.createParticle();
+    humans.forEach((human, index) => {
+      human.simulateEncounter(humans.slice(index));
+      human.createHuman();
     });
 
-    humansRenderer.draw(particles);
+    humansRenderer.draw(humans);
 
-    for(let i = 0;i<particles.length;i++) {
-      particles[i].moveParticle();
+    for(let i = 0;i<humans.length;i++) {
+      humans[i].moveHuman();
     }
+  }
+
+  sk.mouseClicked = () => {
+    const human = new Human(sk, sk.mouseX, sk.mouseY);
+    human.setSick();
+    document.humanStatesCount.sick++;
+    humans.push(human)
   }
 }
 const P5 = new p5(s);

@@ -8,6 +8,17 @@
   <title>Corona simulator</title>
 </head>
 <body>
+<div class="statistics">
+  <h1>Statistics</h1>
+  <p>HEALTHY <span id="healthyCount"></span></p>
+  <p>SICK <span id="sickCount"></span></p>
+  <p>IMMUNE <span id="immuneCount"></span></p>
+  <p>DEAD <span id="deadCount"></span></p>
+
+</div>
+  <input type="range" id="mortalityRate" name="mortalityRate" min="0" max="100" value="7">
+  <label for="mortalityRate">Mortality Rate %</label>
+
 </body>
 <script src="./main.js"></script>
 </html>
