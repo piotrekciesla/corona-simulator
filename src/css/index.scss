@@ -1,25 +1,64 @@
 @import "reset";
+
 html body {
   font-family: Helvetica, Arial;
 }
 
-.statistics{
+strong {
+  font-weight: bold;
+}
+
+.settings {
+
+}
+
+.resetButton {
+  padding: 10px 20px;
+  background-color: rgba(255, 73, 85, 0.69);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+
+  cursor: pointer;
+}
+
+.settings .setting {
+  span {
+    font-weight: bold;
+  }
+}
+
+.statistics, .settings {
   position: fixed;
   top: 10px;
-  right: 10px;
+  &.statistics{
+    right: 10px;
+  }
+  &.settings {
+    left: 10px;
+  }
   padding: 10px 20px;
   background-color: rgba(255, 255, 255, 0.51);
   border-radius: 15px;
   box-shadow: 10px 10px 10px 13px rgba(0, 0, 0, 0.17);
-  h1 {
-    margin-bottom: 15px;
-    font-size: 30px;
-  }
+}
+
+h1 {
+  margin-bottom: 15px;
+  font-size: 30px;
+}
+
+.statistics {
   p {
     margin-bottom: 5px;
     font-weight: bold;
+
     span {
       font-weight: 200;
     }
   }
+
 }

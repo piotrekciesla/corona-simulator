@@ -4,15 +4,18 @@ const sickTime = 400;
 const spring = 0.03;
 const friction = 0.999;
 const mortalityRate = () => document.getElementById('mortalityRate').value/100;
+const getInfectionDistance = () => document.getElementById('infectionDistance').value;
 
 class Human {
   constructor(sk, x , y){
+    document.humanStatesCount.healthy++;
+    document.humanStatesCount.total++;
     this.sk = sk;
 
     this.r = 6;
 
     this.x = x || sk.random(0,sk.width);
-    this.y = y || sk.random(0,sk.height);
+    this.y = y || sk.random(0,sk.height-100);
     this.xSpeed = sk.random(-2,2);
     this.ySpeed = sk.random(-1,1.5);
 
@@ -92,7 +95,7 @@ class Human {
 
     if(this.x < this.r || this.x >this.sk.width - this.r)
       this.xSpeed*=-1;
-    if(this.y < this.r || this.y > this.sk.height -this.r)
+    if(this.y < this.r || this.y > this.sk.height-100 -this.r)
       this.ySpeed*=-1;
     this.x+=this.xSpeed;
     this.y+=this.ySpeed;
@@ -155,10 +158,11 @@ class Human {
   }
 
   simulateEncounter(particles) {
+    const infectionDistance = getInfectionDistance();
     particles.forEach(element =>{
 
       let dis = this.sk.dist(this.x,this.y,element.x,element.y);
-        if ( dis < 40 && (this.isSick() || element.isSick()) ) {
+        if ( dis < infectionDistance && (this.isSick() || element.isSick()) ) {
           element.setSick();
           this.setSick();
         }
