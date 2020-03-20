@@ -6,6 +6,8 @@ const spring = 0.03;
 const friction = 0.999;
 const mortalityRate = () => document.getElementById('mortalityRate').value/100;
 const getInfectionDistance = () => document.getElementById('infectionDistance').value;
+const closeSchool = () => document.getElementById('closeSchool').checked;
+const youngPopulationPercentage = () => document.getElementById('youngPopulationPercentage').value;
 
 class Human {
   constructor(sk, x , y){
@@ -18,9 +20,9 @@ class Human {
     this.x = x || random(0,sk.width);
     this.y = y || random(0,sk.height);
     this.xSpeed = random(-2,2);
-    this.ySpeed = random(-1,1.5);
+    this.ySpeed = random(-2,2);
 
-    this.age = random(1, 90);
+    this.age = random(0, 100) < youngPopulationPercentage() ? random(1, 20) : (20, 80);
     this.state = HumanStates.HEALTHY;
     this.timeUntilCured = 0;
 
@@ -92,6 +94,16 @@ class Human {
     if  (this.isSick() && this.timeUntilCured < sickTime/2){
       this.xSpeed = 0;
       this.ySpeed = 0;
+    }
+
+    if  (this.age < 19 && closeSchool()){
+      this.xSpeed = 0;
+      this.ySpeed = 0;
+    }
+
+    if( this.xSpeed === 0 && this.ySpeed === 0 && !closeSchool() && !this.isSick() && !this.isDead() ){
+      this.xSpeed = random(-2,2);
+      this.ySpeed = random(-2,2);
     }
 
     if(this.x < this.r || this.x >this.sk.width - this.r)

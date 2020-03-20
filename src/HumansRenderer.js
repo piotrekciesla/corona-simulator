@@ -17,7 +17,13 @@ class HumansRenderer {
   };
 
   drawHuman(human) {
-    this.sk.noStroke();
+
+    if (human.age <= 19 ){
+      this.sk.strokeWeight(2);
+      this.sk.stroke(`rgba(29, 163, 200, 0.5)`);
+    }else {
+      this.sk.noStroke();
+    }
     this.sk.fill(humanStatesColors.HEALTHY);
 
     if ( human.isSick() ) {
