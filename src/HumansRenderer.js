@@ -8,7 +8,8 @@ class HumansRenderer {
     this.sk = sk;
   }
 
-  draw(humans) {
+  async draw(humans) {
+    this.sk.background("#ffffff");
     humans.forEach((human, index) => {
       this.drawHuman(human);
       this.drawEncounters(human, humans.slice(index));

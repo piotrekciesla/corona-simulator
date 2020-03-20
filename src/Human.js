@@ -1,4 +1,5 @@
 import HumanStates from './HumanStates'
+import random from './utils/random'
 
 const sickTime = 400;
 const spring = 0.03;
@@ -14,12 +15,12 @@ class Human {
 
     this.r = 6;
 
-    this.x = x || sk.random(0,sk.width);
-    this.y = y || sk.random(0,sk.height-100);
-    this.xSpeed = sk.random(-2,2);
-    this.ySpeed = sk.random(-1,1.5);
+    this.x = x || random(0,sk.width);
+    this.y = y || random(0,sk.height);
+    this.xSpeed = random(-2,2);
+    this.ySpeed = random(-1,1.5);
 
-    this.age = sk.random(1, 90);
+    this.age = random(1, 90);
     this.state = HumanStates.HEALTHY;
     this.timeUntilCured = 0;
 
@@ -33,8 +34,8 @@ class Human {
         this.r -= 0.2
       }
       this.timeUntilCured--;
-      this.xSpeed += this.sk.random(-0.1,0.1);
-      this.ySpeed -= this.sk.random(-0.1,0.1);
+      this.xSpeed += random(-0.1,0.1);
+      this.ySpeed -= random(-0.1,0.1);
 
       if(this.timeUntilCured === 0 ){
         const chanceOfDeath = Math.random();
@@ -95,7 +96,7 @@ class Human {
 
     if(this.x < this.r || this.x >this.sk.width - this.r)
       this.xSpeed*=-1;
-    if(this.y < this.r || this.y > this.sk.height-100 -this.r)
+    if(this.y < this.r || this.y > this.sk.height -this.r)
       this.ySpeed*=-1;
     this.x+=this.xSpeed;
     this.y+=this.ySpeed;
@@ -108,6 +109,7 @@ class Human {
     if(this.isSick() || this.isImmune() || this.isDead()){
       return
     }
+    this.leftInfections = 2;
     document.humanStatesCount[this.state]--;
     this.state = HumanStates.SICK;
     document.humanStatesCount[this.state]++;
@@ -133,8 +135,8 @@ class Human {
     this.state = HumanStates.IMMUNE;
     document.humanStatesCount[this.state]++;
 
-    this.xSpeed = this.sk.random(-2,2);
-    this.ySpeed = this.sk.random(-1,1.5);
+    this.xSpeed = random(-2,2);
+    this.ySpeed = random(-1,1.5);
   }
 
   collideHumans(human1, human2){
@@ -157,10 +159,9 @@ class Human {
     human2.ySpeed -= ay;
   }
 
-  simulateEncounter(particles) {
+  simulateEncounter(humans) {
     const infectionDistance = getInfectionDistance();
-    particles.forEach(element =>{
-
+    humans.forEach(element =>{
       let dis = this.sk.dist(this.x,this.y,element.x,element.y);
         if ( dis < infectionDistance && (this.isSick() || element.isSick()) ) {
           element.setSick();
